@@ -1,0 +1,134 @@
+.seat-map {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.map-container {
+  border: 2px solid #333;
+  background-color: #f9f9f9;
+  padding: 40px 20px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.entrance {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  background-color: #333;
+  color: white;
+  padding: 5px 15px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.seat-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.row-top {
+  margin-bottom: 30px;
+}
+
+.row-pair {
+  margin-bottom: 30px;
+}
+
+.row-2-top {
+  margin-bottom: 10px;
+}
+
+.row-2-bottom {
+  margin-bottom: 30px;
+}
+
+.row-bottom {
+  margin-bottom: 0;
+}
+
+.seat {
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.seat:hover:not(.reserved) {
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.seat.selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #0056b3;
+  box-shadow: 0 0 12px rgba(0, 123, 255, 0.5);
+}
+
+.seat.reserved {
+  background-color: #e0e0e0;
+  color: #999;
+  cursor: not-allowed;
+  border-color: #ccc;
+}
+
+.seat-legend {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.legend-seat {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #ddd;
+  background-color: #fff;
+  border-radius: 4px;
+}
+
+.legend-seat.selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #0056b3;
+}
+
+.legend-seat.reserved {
+  background-color: #e0e0e0;
+  border-color: #ccc;
+}
+
+@media (max-width: 768px) {
+  .seat {
+    width: 35px;
+    height: 35px;
+    font-size: 0.8rem;
+  }
+
+  .seat-row {
+    gap: 10px;
+  }
+}

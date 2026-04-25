@@ -139,3 +139,62 @@
 .btn-secondary:hover {
   background-color: #e0e0e0;
 }
+
+/* =========================================================
+   [追加] 複数時間帯選択用
+========================================================= */
+
+.time-slot-selected {
+  border-color: #007bff;
+  background-color: #e3f2fd;
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.18);
+}
+
+.time-slot-full {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.time-slot-full:hover {
+  border-color: #ddd;
+  box-shadow: none;
+}
+
+.selected-button {
+  background-color: #4caf50;
+}
+
+.selected-button:hover {
+  background-color: #45a049;
+}
+
+.select-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.selected-time-summary {
+  max-width: 500px;
+  margin: 0 auto 24px;
+  padding: 16px;
+  background-color: #f0f8ff;
+  border: 1px solid #90caf9;
+  border-radius: 8px;
+  text-align: center;
+  color: #1565c0;
+  line-height: 1.7;
+}
+
+/* TimeSlotPage専用：下部ボタンの幅を揃える */
+.time-slot-page .button-group {
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+}
+
+.time-slot-page .button-group .btn-primary,
+.time-slot-page .button-group .btn-secondary {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}

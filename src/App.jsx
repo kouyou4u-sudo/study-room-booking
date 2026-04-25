@@ -18,7 +18,7 @@ function App() {
   // 予約データを管理するステート
   const [reservationData, setReservationData] = useState({
     date: null,
-    timeSlot: null,
+    timeSlots: [],
     seat: null,
     studentName: '',
     grade: '',

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 
-// ページコンポーネント（後で作成）
+// ページコンポーネント
 import TopPage from './pages/TopPage';
 import ReservationPage from './pages/ReservationPage';
 import DateSelectPage from './pages/DateSelectPage';
@@ -14,6 +14,8 @@ import CompletePage from './pages/CompletePage';
 function App() {
   // 画面遷移を管理するステート
   const [currentPage, setCurrentPage] = useState('top');
+
+  // 予約データを管理するステート
   const [reservationData, setReservationData] = useState({
     date: null,
     timeSlot: null,
@@ -30,29 +32,62 @@ function App() {
     switch (currentPage) {
       case 'top':
         return <TopPage onNavigate={setCurrentPage} />;
+      
       case 'reservation':
-        return <ReservationPage onNavigate={setCurrentPage} />;
+        return (
+          <ReservationPage 
+            onNavigate={setCurrentPage}
+            reservationData={reservationData}
+            setReservationData={setReservationData}
+          />
+        );
+      
       case 'dateSelect':
-        return <DateSelectPage onNavigate={setCurrentPage} onSelectDate={(date) => {
-          setReservationData({ ...reservationData, date });
-          setCurrentPage('timeSlot');
-        }} />;
+        return (
+          <DateSelectPage 
+            onNavigate={setCurrentPage}
+            reservationData={reservationData}
+          />
+        );
+      
       case 'timeSlot':
-        return <TimeSlotPage onNavigate={setCurrentPage} onSelectTime={(timeSlot) => {
-          setReservationData({ ...reservationData, timeSlot });
-          setCurrentPage('seatMap');
-        }} />;
+        return (
+          <TimeSlotPage 
+            onNavigate={setCurrentPage}
+            reservationData={reservationData}
+            setReservationData={setReservationData}
+          />
+        );
+      
       case 'seatMap':
-        return <SeatMapPage onNavigate={setCurrentPage} onSelectSeat={(seat) => {
-          setReservationData({ ...reservationData, seat });
-          setCurrentPage('form');
-        }} />;
+        return (
+          <SeatMapPage 
+            onNavigate={setCurrentPage}
+            reservationData={reservationData}
+            setReservationData={setReservationData}
+          />
+        );
+      
       case 'form':
-        return <ReservationFormPage onNavigate={setCurrentPage} reservationData={reservationData} setReservationData={setReservationData} />;
+        return (
+          <ReservationFormPage 
+            onNavigate={setCurrentPage}
+            reservationData={reservationData}
+            setReservationData={setReservationData}
+          />
+        );
+      
       case 'confirm':
-        return <ConfirmPage onNavigate={setCurrentPage} reservationData={reservationData} />;
+        return (
+          <ConfirmPage 
+            onNavigate={setCurrentPage}
+            reservationData={reservationData}
+          />
+        );
+      
       case 'complete':
         return <CompletePage onNavigate={setCurrentPage} />;
+      
       default:
         return <TopPage onNavigate={setCurrentPage} />;
     }

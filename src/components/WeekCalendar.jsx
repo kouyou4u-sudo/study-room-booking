@@ -1,21 +1,13 @@
 import '../styles/WeekCalendar.css';
 
 function WeekCalendar({ weekStart, today, onSelectDate }) {
-  // 7日分の日付配列を作成
+  // 7日分の日付を生成
   const weekDates = [];
   for (let i = 0; i < 7; i++) {
-    const date = new Date(today);
-    date.setDate(date.getDate() + weekStart + i);
+    const date = new Date(weekStart);
+    date.setDate(weekStart.getDate() + i);
     weekDates.push(date);
   }
-
-  // 日付フォーマット
-  const formatDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}/${month}/${day}`;
-  };
 
   // 曜日を取得
   const getDayOfWeek = (date) => {
@@ -23,33 +15,39 @@ function WeekCalendar({ weekStart, today, onSelectDate }) {
     return days[date.getDay()];
   };
 
-  // ダミー：空き状況を返す（後で API から取得）
+  // 日付をフォーマット（例：25日（日））
+  const formatDate = (date) => {
+    const day = date.getDate();
+    const dayOfWeek = getDayOfWeek(date);
+    return `${day}日（${dayOfWeek}）`;
+  };
+
+  // 空き状況をダミーで返す（後で API から取得）
   const getAvailability = (date) => {
     const random = Math.random();
     if (random > 0.7) return '×'; // 満席
-    if (random > 0.4) return '△'; // 残席わずか
+    if (random > 0.4) return '△'; // 残りわずか
     return '○'; // 空きあり
   };
 
   return (
     <div className="week-calendar">
       <div className="calendar-grid">
-        {weekDates.map((date, index) => (
-          <div 
-            key={index}
-            className="calendar-day"
-            onClick={() => onSelectDate(date)}
-          >
-            <div className="date-label">
-              {date.getDate()}日
-              <span className="day-of-week">({getDayOfWeek(date)})</span>
+        {weekDates.map((date) => {
+          const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD形式
+          return (
+            <div key={dateKey} className="calendar-day">
+              <div className="date-label">{formatDate(date)}</div>
+              <div className="status-icon">{getAvailability(date)}</div>
+              <button
+                onClick={() => onSelectDate(date)}
+                className="btn-select"
+              >
+                選択する
+              </button>
             </div>
-            <div className={`availability availability-${getAvailability(date)}`}>
-              {getAvailability(date)}
-            </div>
-            <button className="btn-select">選択する</button>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

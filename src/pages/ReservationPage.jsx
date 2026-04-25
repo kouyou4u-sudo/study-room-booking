@@ -2,28 +2,31 @@ import { useState } from 'react';
 import WeekCalendar from '../components/WeekCalendar';
 import '../styles/ReservationPage.css';
 
-function ReservationPage({ onNavigate }) {
-  const [currentWeekStart, setCurrentWeekStart] = useState(0); // 0 = 今週, 7 = 来週
-
-  // 今日の日付を取得
+function ReservationPage({ onNavigate, setReservationData, reservationData }) {
+  const [weekStart, setWeekStart] = useState(0); // 0 = 今週, 1 = 来週, etc.
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const currentWeekStart = new Date(today);
+  currentWeekStart.setDate(today.getDate() - today.getDay());
 
-  // 14日先までの制限
-  const maxDays = 14;
+  const displayWeekStart = new Date(currentWeekStart);
+  displayWeekStart.setDate(currentWeekStart.getDate() + weekStart * 7);
 
-  // 「前の週」ボタン
-  const handlePrevWeek = () => {
-    if (currentWeekStart >= 7) {
-      setCurrentWeekStart(currentWeekStart - 7);
+  const handlePreviousWeek = () => {
+    if (weekStart > 0) {
+      setWeekStart(weekStart - 1);
     }
   };
 
-  // 「次の週」ボタン
   const handleNextWeek = () => {
-    if (currentWeekStart + 7 < maxDays) {
-      setCurrentWeekStart(currentWeekStart + 7);
+    // 14日以内という制約
+    if (weekStart < 2) {
+      setWeekStart(weekStart + 1);
     }
+  };
+
+  const handleSelectDate = (date) => {
+    setReservationData({ ...reservationData, date: date.toISOString() });
+    onNavigate('dateSelect');
   };
 
   return (
@@ -32,39 +35,36 @@ function ReservationPage({ onNavigate }) {
       <p className="subtitle">1週間の空き状況を確認して、日付を選択してください。</p>
 
       <div className="calendar-controls">
-        <button 
-          onClick={handlePrevWeek}
-          disabled={currentWeekStart === 0}
-          className="btn btn-secondary"
+        <button
+          onClick={handlePreviousWeek}
+          disabled={weekStart === 0}
+          className="btn-nav"
         >
           ← 前の週
         </button>
-        <span className="week-label">
-          {currentWeekStart === 0 ? '今週' : `${Math.floor(currentWeekStart / 7)}週目`}
-        </span>
-        <button 
+        <button
           onClick={handleNextWeek}
-          disabled={currentWeekStart + 7 >= maxDays}
-          className="btn btn-secondary"
+          disabled={weekStart >= 2}
+          className="btn-nav"
         >
           次の週 →
         </button>
       </div>
 
-      <WeekCalendar 
-        weekStart={currentWeekStart}
+      <WeekCalendar
+        weekStart={displayWeekStart}
         today={today}
-        onSelectDate={(date) => {
-          onNavigate('dateSelect');
-        }}
+        onSelectDate={handleSelectDate}
       />
 
-      <button 
-        onClick={() => onNavigate('top')}
-        className="btn btn-back"
-      >
-        戻る
-      </button>
+      <div className="button-group">
+        <button
+          onClick={() => onNavigate('top')}
+          className="btn btn-secondary"
+        >
+          戻る
+        </button>
+      </div>
     </div>
   );
 }

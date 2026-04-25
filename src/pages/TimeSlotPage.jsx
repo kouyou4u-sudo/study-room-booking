@@ -1,40 +1,34 @@
-import { useState } from 'react';
-import { TIME_SLOTS } from '../data/timeSlots';
 import '../styles/TimeSlotPage.css';
 
-function TimeSlotPage({ onNavigate, onSelectTime }) {
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState(null);
+function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
+  const TIME_SLOTS = [
+    '13:00〜13:55',
+    '14:00〜14:55',
+    '15:00〜15:55',
+    '16:00〜16:55',
+    '17:00〜17:55',
+    '18:00〜18:55',
+    '19:00〜19:55',
+    '20:00〜20:55',
+    '21:00〜21:55',
+  ];
 
-  // ダミー：各時間帯の残席数（後で API から取得）
-  const getAvailableSeats = (slotId) => {
-    const slots = {
-      1: 8,
-      2: 15,
-      3: 0,
-      4: 3,
-      5: 12,
-      6: 20,
-      7: 5,
-      8: 1,
-      9: 18,
-    };
-    return slots[slotId];
-  };
-
-  const getStatus = (availableSeats) => {
-    if (availableSeats === 0) return '×';
-    if (availableSeats <= 5) return '△';
+  // 空き状況をダミー取得（後で API から取得）
+  const getAvailability = () => {
+    const random = Math.random();
+    if (random > 0.7) return '×';
+    if (random > 0.4) return '△';
     return '○';
   };
 
-  const handleSelectSlot = (slotId) => {
-    setSelectedTimeSlot(slotId);
+  // 残席数をダミー取得
+  const getAvailableSeats = () => {
+    return Math.floor(Math.random() * 20) + 1;
   };
 
-  const handleConfirm = () => {
-    if (selectedTimeSlot) {
-      onSelectTime(selectedTimeSlot);
-    }
+  const handleSelectTimeSlot = (timeSlot) => {
+    setReservationData({ ...reservationData, timeSlot });
+    onNavigate('seatMap');
   };
 
   return (
@@ -43,50 +37,25 @@ function TimeSlotPage({ onNavigate, onSelectTime }) {
       <p className="subtitle">ご希望の時間帯をお選びください。</p>
 
       <div className="time-slots-container">
-        {TIME_SLOTS.map((slot) => {
-          const availableSeats = getAvailableSeats(slot.id);
-          const status = getStatus(availableSeats);
-          const isSelected = selectedTimeSlot === slot.id;
-
-          return (
-            <div
-              key={slot.id}
-              className={`time-slot-card ${isSelected ? 'selected' : ''}`}
-              onClick={() => handleSelectSlot(slot.id)}
+        {TIME_SLOTS.map((slot) => (
+          <div key={slot} className="time-slot">
+            <div className="time-slot-time">{slot}</div>
+            <div className="status-icon">{getAvailability()}</div>
+            <div className="available-seats">残席：{getAvailableSeats()}席</div>
+            <button
+              onClick={() => handleSelectTimeSlot(slot)}
+              className="select-button"
             >
-              <div className="time-label">{slot.label}</div>
-              <div className={`status status-${status}`}>{status}</div>
-              <div className="available-seats">
-                残席：{availableSeats}席
-              </div>
-              <button className="btn-select">選択する</button>
-            </div>
-          );
-        })}
+              選択する
+            </button>
+          </div>
+        ))}
       </div>
-
-      {selectedTimeSlot && (
-        <div className="selection-info">
-          <p>
-            選択中の時間帯：
-            <strong>
-              {TIME_SLOTS.find((s) => s.id === selectedTimeSlot)?.label}
-            </strong>
-          </p>
-        </div>
-      )}
 
       <div className="button-group">
         <button
-          onClick={handleConfirm}
-          disabled={!selectedTimeSlot}
-          className="btn btn-primary"
-        >
-          この時間帯を選択
-        </button>
-        <button
           onClick={() => onNavigate('reservation')}
-          className="btn btn-secondary"
+          className="btn-secondary"
         >
           戻る
         </button>

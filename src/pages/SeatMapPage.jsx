@@ -2,19 +2,20 @@ import { useState } from 'react';
 import SeatMap from '../components/SeatMap';
 import '../styles/SeatMapPage.css';
 
-function SeatMapPage({ onNavigate, onSelectSeat }) {
+function SeatMapPage({ onNavigate, reservationData, setReservationData }) {
   const [selectedSeat, setSelectedSeat] = useState(null);
 
-  // ダミー：予約済み座席（後で API から取得）
+  // ダミー：予約済み座席
   const reservedSeats = [3, 7, 11, 15, 18];
 
   const handleSelectSeat = (seatNumber) => {
     setSelectedSeat(seatNumber);
+    setReservationData({ ...reservationData, seat: seatNumber });
   };
 
   const handleConfirm = () => {
     if (selectedSeat) {
-      onSelectSeat(selectedSeat);
+      onNavigate('form');
     }
   };
 
@@ -23,29 +24,25 @@ function SeatMapPage({ onNavigate, onSelectSeat }) {
       <h1>座席を選択</h1>
       <p className="subtitle">予約したい座席をクリックしてください。</p>
 
-      <SeatMap
-        selectedSeat={selectedSeat}
-        onSelectSeat={handleSelectSeat}
-        reservedSeats={reservedSeats}
-      />
-
-      {selectedSeat && (
-        <div className="selection-info">
-          <p>選択中の座席：<strong>座席 {selectedSeat}</strong></p>
-        </div>
-      )}
+      <div className="map-container">
+        <SeatMap
+          reservedSeats={reservedSeats}
+          selectedSeat={selectedSeat}
+          onSelectSeat={handleSelectSeat}
+        />
+      </div>
 
       <div className="button-group">
         <button
           onClick={handleConfirm}
           disabled={!selectedSeat}
-          className="btn btn-primary"
+          className="btn-primary"
         >
           この座席を予約する
         </button>
         <button
           onClick={() => onNavigate('timeSlot')}
-          className="btn btn-secondary"
+          className="btn-secondary"
         >
           戻る
         </button>

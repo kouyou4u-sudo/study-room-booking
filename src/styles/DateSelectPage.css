@@ -1,58 +1,123 @@
 .date-select-page {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 40px 20px;
-  text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 .date-select-page h1 {
-  font-size: 2rem;
-  margin-bottom: 10px;
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+    text-align: center;
 }
 
 .subtitle {
-  color: #666;
-  margin-bottom: 20px;
-  font-size: 1rem;
+    text-align: center;
+    color: #666;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
 }
 
-.date-select-page p {
-  color: #666;
-  margin-bottom: 30px;
+.selected-date-display {
+    background-color: #f0f8ff;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.selected-date-label {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0 0 10px 0;
+}
+
+.selected-date-value {
+    color: #007bff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.description {
+    color: #666;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 0.95rem;
 }
 
 .button-group {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 40px;
-  flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+@media (min-width: 600px) {
+    .button-group {
+        flex-direction: row;
+        gap: 15px;
+    }
+}
+
+.btn {
+    padding: 14px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    min-height: 48px;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .btn-primary {
-  padding: 12px 30px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
+    background-color: #007bff;
+    color: white;
 }
 
 .btn-primary:hover {
-  background-color: #0056b3;
+    background-color: #0056b3;
 }
 
 .btn-secondary {
-  padding: 12px 30px;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    color: #333;
 }
 
 .btn-secondary:hover {
-  background-color: #e0e0e0;
+    background-color: #e0e0e0;
+}
+
+/* =========================================================
+   [修正] DateSelectPage専用ボタン幅の固定
+   目的:
+   - 他ページの .btn-primary / .btn-secondary の影響を受けないようにする
+   - 2つのボタンの横幅を揃える
+========================================================= */
+
+.date-select-page .button-group {
+    width: 100%;
+}
+
+.date-select-page .button-group .btn {
+    width: 100%;
+    max-width: none;
+    display: block;
+    box-sizing: border-box;
+}
+
+/* このページ専用のメインボタン */
+.date-select-page .button-group .btn-primary {
+    background-color: #007bff;
+    color: white;
+}
+
+/* このページ専用の戻るボタン */
+.date-select-page .button-group .btn-secondary {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    color: #333;
 }

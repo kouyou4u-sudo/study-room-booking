@@ -1,28 +1,32 @@
+import '../styles/TopPage.css';
+
 function TopPage({ onNavigate }) {
   return (
     <div className="top-page">
-      <section className="hero">
-        <h1>集中できる時間を、予約できる。</h1>
-        <p>WaseDriveの自習室は、授業がない日でも利用可能。</p>
-        <p>静かな学習環境を、必要な時間にしっかり確保できます。</p>
-        <button 
-          className="btn btn-primary"
+      <div className="hero">
+        <h1 className="hero-title">自習室予約</h1>
+        <p className="hero-subtitle">
+          静かな学習環境で、集中できる時間を確保できます。<br />
+          本日から14日先まで予約可能です。
+        </p>
+        <button
           onClick={() => onNavigate('reservation')}
+          className="btn btn-primary"
         >
-          自習室を予約する
+          予約を始める
         </button>
-      </section>
+      </div>
 
-      <section className="rules-preview">
+      <div className="rules-section">
         <h2>利用ルール</h2>
-        <ul>
+        <ul className="rules-list">
           <li>自習室は、本日から14日先まで予約できます。</li>
           <li>予約はWaseDrive会員・塾生のみ利用できます。</li>
           <li>利用時間は13:00〜21:55です。</li>
           <li>1コマは55分です。</li>
-          <li>複数コマを連続して予約することもできます。</li>
+          <li>複数のコマを連続して予約することもできます。</li>
         </ul>
-      </section>
+      </div>
     </div>
   );
 }

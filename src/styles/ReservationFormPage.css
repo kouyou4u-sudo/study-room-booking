@@ -173,3 +173,55 @@
 .btn-secondary:hover {
   background-color: #e0e0e0;
 }
+
+/* =========================================================
+   [修正] ReservationFormPage専用：ボタン幅を揃える
+   目的:
+   - 他ページの .btn-primary / .btn-secondary の影響を受けないようにする
+   - 「予約内容を確認する」と「戻る」の横幅を揃える
+========================================================= */
+
+.form-page .button-group {
+  width: 100%;
+  max-width: none;
+  margin: 20px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.form-page .button-group .btn,
+.form-page .button-group .btn-primary,
+.form-page .button-group .btn-secondary {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  display: block;
+  flex: none;
+  min-height: 48px;
+  padding: 14px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* 確認ボタン */
+.form-page .button-group .btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+/* 無効時 */
+.form-page .button-group .btn-primary:disabled {
+  background-color: #ccc;
+  color: white;
+  cursor: not-allowed;
+}
+
+/* 戻るボタン */
+.form-page .button-group .btn-secondary {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+}

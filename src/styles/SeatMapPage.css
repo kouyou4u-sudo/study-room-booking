@@ -72,3 +72,46 @@
 .btn-secondary:hover {
   background-color: #e0e0e0;
 }
+
+/* =========================================================
+   [修正] SeatMapPage専用：ボタン幅を揃える
+   目的:
+   - 他ページの .btn-primary / .btn-secondary の影響を止める
+   - 「この座席を予約する」と「戻る」の横幅を揃える
+========================================================= */
+
+.seat-map-page .button-group {
+  width: 100%;
+  max-width: 250px;
+  margin: 40px auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.seat-map-page .button-group .btn-primary,
+.seat-map-page .button-group .btn-secondary {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+  display: block;
+  min-height: 48px;
+  padding: 14px 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+/* 予約するボタン */
+.seat-map-page .button-group .btn-primary {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+}
+
+/* 戻るボタン */
+.seat-map-page .button-group .btn-secondary {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+}

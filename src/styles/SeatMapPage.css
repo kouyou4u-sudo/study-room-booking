@@ -10,14 +10,14 @@
   text-align: center;
 }
 
-.subtitle {
+.seat-map-page .subtitle {
   text-align: center;
   color: #666;
   margin-bottom: 30px;
   font-size: 1rem;
 }
 
-.selection-info {
+.seat-map-page .selection-info {
   text-align: center;
   padding: 20px;
   background-color: #e3f2fd;
@@ -27,58 +27,16 @@
   font-size: 1.1rem;
 }
 
-.selection-info strong {
+.seat-map-page .selection-info strong {
   color: #1976d2;
 }
 
-.button-group {
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  margin-top: 40px;
-  flex-wrap: wrap;
+.seat-map-page .reserved-note {
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 0.95rem;
+  color: #555;
 }
-
-.btn-primary {
-  padding: 12px 30px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background-color: #0056b3;
-}
-
-.btn-primary:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-.btn-secondary {
-  padding: 12px 30px;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease;
-}
-
-.btn-secondary:hover {
-  background-color: #e0e0e0;
-}
-
-/* =========================================================
-   [修正] SeatMapPage専用：ボタン幅を揃える
-   目的:
-   - 他ページの .btn-primary / .btn-secondary の影響を止める
-   - 「この座席を予約する」と「戻る」の横幅を揃える
-========================================================= */
 
 .seat-map-page .button-group {
   width: 100%;
@@ -102,16 +60,29 @@
   font-weight: bold;
 }
 
-/* 予約するボタン */
 .seat-map-page .button-group .btn-primary {
   background-color: #4caf50;
   color: white;
   border: none;
+  cursor: pointer;
 }
 
-/* 戻るボタン */
+.seat-map-page .button-group .btn-primary:hover:not(:disabled) {
+  background-color: #43a047;
+}
+
+.seat-map-page .button-group .btn-primary:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 .seat-map-page .button-group .btn-secondary {
   background-color: #2196f3;
   color: white;
   border: none;
+  cursor: pointer;
+}
+
+.seat-map-page .button-group .btn-secondary:hover {
+  background-color: #1e88e5;
 }

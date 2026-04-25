@@ -1,73 +1,75 @@
+import { getTimeSlotsBySeat } from '../data/timeSlots';
 import '../styles/TimeSlotPage.css';
 
 function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
-  const TIME_SLOTS = [
-    { time: '13:00〜13:55', status: '○', availableSeats: 20 },
-    { time: '14:00〜14:55', status: '△', availableSeats: 5 },
-    { time: '15:00〜15:55', status: '×', availableSeats: 0 },
-    { time: '16:00〜16:55', status: '○', availableSeats: 12 },
-    { time: '17:00〜17:55', status: '○', availableSeats: 8 },
-    { time: '18:00〜18:55', status: '△', availableSeats: 3 },
-    { time: '19:00〜19:55', status: '○', availableSeats: 10 },
-    { time: '20:00〜20:55', status: '○', availableSeats: 7 },
-    { time: '21:00〜21:55', status: '△', availableSeats: 2 },
-  ];
-
+  const selectedSeat = reservationData.seat;
+  const seatTimeSlots = selectedSeat ? getTimeSlotsBySeat(selectedSeat) : [];
   const selectedTimeSlots = reservationData.timeSlots || [];
 
   const handleToggleTimeSlot = (slot) => {
-    if (slot.status === '×') {
+    if (!slot.isAvailable) {
       return;
     }
 
-    const isSelected = selectedTimeSlots.includes(slot.time);
-
+    const isSelected = selectedTimeSlots.includes(slot.label);
     const newTimeSlots = isSelected
-      ? selectedTimeSlots.filter((time) => time !== slot.time)
-      : [...selectedTimeSlots, slot.time];
+      ? selectedTimeSlots.filter((time) => time !== slot.label)
+      : [...selectedTimeSlots, slot.label];
 
-    setReservationData({
-      ...reservationData,
+    setReservationData((prevData) => ({
+      ...prevData,
       timeSlots: newTimeSlots,
-    });
+    }));
   };
 
   const handleNext = () => {
     if (selectedTimeSlots.length > 0) {
-      onNavigate('seatMap');
+      onNavigate('form');
     }
   };
 
   return (
     <div className="time-slot-page">
-      <h1>時間帯を選択</h1>
-      <p className="subtitle">ご希望の時間帯を1つ以上お選びください。</p>
+      <h1>時間帯を選ぶ</h1>
+      <p className="subtitle">
+        {selectedSeat
+          ? `座席${selectedSeat}番で予約できる時間帯から、利用したいコマを複数選択できます。`
+          : '先に座席を選んでください。'}
+      </p>
+
+      {selectedSeat && (
+        <div className="selected-seat-summary">
+          <p>選択中の座席: {selectedSeat}番</p>
+        </div>
+      )}
 
       <div className="time-slots-container">
-        {TIME_SLOTS.map((slot) => {
-          const isSelected = selectedTimeSlots.includes(slot.time);
-          const isFull = slot.status === '×';
+        {seatTimeSlots.map((slot) => {
+          const isSelected = selectedTimeSlots.includes(slot.label);
+          const isFull = !slot.isAvailable;
 
           return (
             <div
-              key={slot.time}
+              key={slot.id}
               className={`time-slot ${isSelected ? 'time-slot-selected' : ''} ${isFull ? 'time-slot-full' : ''}`}
               onClick={() => handleToggleTimeSlot(slot)}
             >
-              <div className="time-slot-time">{slot.time}</div>
-              <div className="status-icon">{slot.status}</div>
-              <div className="available-seats">残席：{slot.availableSeats}席</div>
+              <div className="time-slot-time">{slot.label}</div>
+              <div className="status-icon">{isFull ? '×' : isSelected ? '✓' : '○'}</div>
+              <div className="available-seats">
+                {isFull ? 'この時間帯は予約できません' : 'この座席で予約可能です'}
+              </div>
 
               <button
                 type="button"
                 disabled={isFull}
                 className={`select-button ${isSelected ? 'selected-button' : ''}`}
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={(event) => {
+                  event.stopPropagation();
                   handleToggleTimeSlot(slot);
                 }}
               >
-                {isFull ? '満席' : isSelected ? '選択中' : '選択する'}
+                {isFull ? '満席' : isSelected ? '選択を解除' : '選択する'}
               </button>
             </div>
           );
@@ -75,9 +77,11 @@ function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
       </div>
 
       <div className="selected-time-summary">
-        <p>選択中：{selectedTimeSlots.length}コマ</p>
-        {selectedTimeSlots.length > 0 && (
+        <p>選択中: {selectedTimeSlots.length}コマ</p>
+        {selectedTimeSlots.length > 0 ? (
           <p>{selectedTimeSlots.join(' / ')}</p>
+        ) : (
+          <p>時間帯を1つ以上選んでください。</p>
         )}
       </div>
 
@@ -87,11 +91,11 @@ function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
           disabled={selectedTimeSlots.length === 0}
           className="btn-primary"
         >
-          選択した時間帯で座席を選ぶ
+          予約情報を入力する
         </button>
 
         <button
-          onClick={() => onNavigate('reservation')}
+          onClick={() => onNavigate('seatMap')}
           className="btn-secondary"
         >
           戻る

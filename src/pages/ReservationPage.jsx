@@ -3,7 +3,7 @@ import WeekCalendar from '../components/WeekCalendar';
 import '../styles/ReservationPage.css';
 
 function ReservationPage({ onNavigate, setReservationData, reservationData }) {
-  const [weekStart, setWeekStart] = useState(0); // 0 = 今週, 1 = 来週, etc.
+  const [weekStart, setWeekStart] = useState(0);
   const today = new Date();
   const currentWeekStart = new Date(today);
   currentWeekStart.setDate(today.getDate() - today.getDay());
@@ -18,21 +18,28 @@ function ReservationPage({ onNavigate, setReservationData, reservationData }) {
   };
 
   const handleNextWeek = () => {
-    // 14日以内という制約
     if (weekStart < 2) {
       setWeekStart(weekStart + 1);
     }
   };
 
   const handleSelectDate = (date) => {
-    setReservationData({ ...reservationData, date: date.toISOString() });
+    // When the date changes, seat and time slots should be selected again.
+    setReservationData({
+      ...reservationData,
+      date: date.toISOString(),
+      seat: null,
+      timeSlots: [],
+    });
     onNavigate('dateSelect');
   };
 
   return (
     <div className="reservation-page">
-      <h1>予約状況</h1>
-      <p className="subtitle">1週間の空き状況を確認して、日付を選択してください。</p>
+      <h1>予約日を選ぶ</h1>
+      <p className="subtitle">
+        1週間ごとのカレンダーから利用したい日付を選択してください。
+      </p>
 
       <div className="calendar-controls">
         <button

@@ -5,8 +5,8 @@ import '../styles/ReservationFormPage.css';
 function ReservationFormPage({ onNavigate, reservationData, setReservationData }) {
   const [agreedToRules, setAgreedToRules] = useState(false);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
     setReservationData({ ...reservationData, [name]: value });
   };
 
@@ -20,8 +20,8 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
 
   return (
     <div className="form-page">
-      <h1>予約情報入力</h1>
-      <p className="subtitle">ご利用者の情報を入力してください。</p>
+      <h1>予約情報を入力</h1>
+      <p className="subtitle">利用者情報を入力してください。</p>
 
       <div className="form-container">
         <form className="reservation-form">
@@ -33,7 +33,7 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               name="studentName"
               value={reservationData.studentName}
               onChange={handleInputChange}
-              placeholder="山田太郎"
+              placeholder="山田 太郎"
             />
           </div>
 
@@ -46,18 +46,18 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               onChange={handleInputChange}
             >
               <option value="">選択してください</option>
-              <option value="小1">小学1年</option>
-              <option value="小2">小学2年</option>
-              <option value="小3">小学3年</option>
-              <option value="小4">小学4年</option>
-              <option value="小5">小学5年</option>
-              <option value="小6">小学6年</option>
-              <option value="中1">中学1年</option>
-              <option value="中2">中学2年</option>
-              <option value="中3">中学3年</option>
-              <option value="高1">高校1年</option>
-              <option value="高2">高校2年</option>
-              <option value="高3">高校3年</option>
+              <option value="小学1年">小学1年</option>
+              <option value="小学2年">小学2年</option>
+              <option value="小学3年">小学3年</option>
+              <option value="小学4年">小学4年</option>
+              <option value="小学5年">小学5年</option>
+              <option value="小学6年">小学6年</option>
+              <option value="中学1年">中学1年</option>
+              <option value="中学2年">中学2年</option>
+              <option value="中学3年">中学3年</option>
+              <option value="高校1年">高校1年</option>
+              <option value="高校2年">高校2年</option>
+              <option value="高校3年">高校3年</option>
             </select>
           </div>
 
@@ -92,7 +92,7 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               name="note"
               value={reservationData.note}
               onChange={handleInputChange}
-              placeholder="特に伝えたいことがあれば記入してください"
+              placeholder="伝えておきたいことがあれば入力してください"
               rows="4"
             />
           </div>
@@ -102,21 +102,19 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               type="checkbox"
               id="agreeToRules"
               checked={agreedToRules}
-              onChange={(e) => setAgreedToRules(e.target.checked)}
+              onChange={(event) => setAgreedToRules(event.target.checked)}
             />
-            <label htmlFor="agreeToRules">
-              利用ルールに同意する
-            </label>
+            <label htmlFor="agreeToRules">利用ルールに同意する</label>
           </div>
 
           <div className="rules-preview">
             <h3>利用ルール</h3>
             <ul>
-              {RESERVATION_RULES.slice(0, 5).map((rule, idx) => (
-                <li key={idx}>{rule}</li>
+              {RESERVATION_RULES.slice(0, 5).map((rule, index) => (
+                <li key={index}>{rule}</li>
               ))}
             </ul>
-            <p className="rules-note">全ルール詳細は画面下を確認してください</p>
+            <p className="rules-note">全ルール詳細は画面下でも確認できます。</p>
           </div>
         </form>
       </div>
@@ -130,7 +128,7 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
           予約内容を確認する
         </button>
         <button
-          onClick={() => onNavigate('seatMap')}
+          onClick={() => onNavigate('timeSlot')}
           className="btn btn-secondary"
         >
           戻る

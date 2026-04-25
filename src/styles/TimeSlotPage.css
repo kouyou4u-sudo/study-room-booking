@@ -10,37 +10,48 @@
   text-align: center;
 }
 
-.subtitle {
+.time-slot-page .subtitle {
   text-align: center;
   color: #666;
-  margin-bottom: 30px;
+  margin-bottom: 24px;
   font-size: 0.95rem;
 }
 
-.time-slots-container {
+.time-slot-page .selected-seat-summary,
+.time-slot-page .selected-time-summary {
+  max-width: 500px;
+  margin: 0 auto 24px;
+  padding: 16px;
+  background-color: #f0f8ff;
+  border: 1px solid #90caf9;
+  border-radius: 8px;
+  text-align: center;
+  color: #1565c0;
+  line-height: 1.7;
+}
+
+.time-slot-page .time-slots-container {
   display: grid;
   grid-template-columns: 1fr;
   gap: 15px;
   margin-bottom: 30px;
 }
 
-/* タブレット：2列 */
 @media (min-width: 600px) {
-  .time-slots-container {
+  .time-slot-page .time-slots-container {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
 }
 
-/* デスクトップ：3列 */
 @media (min-width: 1000px) {
-  .time-slots-container {
+  .time-slot-page .time-slots-container {
     grid-template-columns: repeat(3, 1fr);
     gap: 25px;
   }
 }
 
-.time-slot {
+.time-slot-page .time-slot {
   border: 2px solid #ddd;
   border-radius: 8px;
   padding: 20px;
@@ -50,30 +61,30 @@
   cursor: pointer;
 }
 
-.time-slot:hover {
+.time-slot-page .time-slot:hover {
   border-color: #007bff;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
 }
 
-.time-slot-time {
+.time-slot-page .time-slot-time {
   font-size: 1.1rem;
   font-weight: bold;
   margin-bottom: 12px;
   color: #333;
 }
 
-.status-icon {
+.time-slot-page .status-icon {
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
 
-.available-seats {
+.time-slot-page .available-seats {
   font-size: 0.9rem;
   color: #666;
   margin-bottom: 15px;
 }
 
-.select-button {
+.time-slot-page .select-button {
   width: 100%;
   padding: 12px;
   background-color: #007bff;
@@ -87,30 +98,31 @@
   transition: background-color 0.3s ease;
 }
 
-.select-button:hover {
+.time-slot-page .select-button:hover {
   background-color: #0056b3;
 }
 
-.button-group {
+.time-slot-page .button-group {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  max-width: 400px;
+  width: 100%;
   margin: 0 auto;
 }
 
 @media (min-width: 600px) {
-  .button-group {
+  .time-slot-page .button-group {
     flex-direction: row;
     justify-content: center;
   }
 }
 
-.btn-primary {
+.time-slot-page .btn-primary,
+.time-slot-page .btn-secondary {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
   padding: 12px 30px;
-  background-color: #007bff;
-  color: white;
-  border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
@@ -120,81 +132,52 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-primary:hover {
+.time-slot-page .btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+}
+
+.time-slot-page .btn-primary:hover:not(:disabled) {
   background-color: #0056b3;
 }
 
-.btn-secondary {
-  padding: 12px 30px;
+.time-slot-page .btn-secondary {
   background-color: #f0f0f0;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  min-height: 48px;
-  flex: 1;
+  color: #333;
 }
 
-.btn-secondary:hover {
+.time-slot-page .btn-secondary:hover {
   background-color: #e0e0e0;
 }
 
-/* =========================================================
-   [追加] 複数時間帯選択用
-========================================================= */
-
-.time-slot-selected {
+.time-slot-page .time-slot-selected {
   border-color: #007bff;
   background-color: #e3f2fd;
   box-shadow: 0 4px 12px rgba(0, 123, 255, 0.18);
 }
 
-.time-slot-full {
+.time-slot-page .time-slot-full {
   opacity: 0.6;
   cursor: not-allowed;
 }
 
-.time-slot-full:hover {
+.time-slot-page .time-slot-full:hover {
   border-color: #ddd;
   box-shadow: none;
 }
 
-.selected-button {
+.time-slot-page .selected-button {
   background-color: #4caf50;
 }
 
-.selected-button:hover {
+.time-slot-page .selected-button:hover {
   background-color: #45a049;
 }
 
-.select-button:disabled {
+.time-slot-page .select-button:disabled,
+.time-slot-page .btn-primary:disabled {
   background-color: #ccc;
   cursor: not-allowed;
-}
-
-.selected-time-summary {
-  max-width: 500px;
-  margin: 0 auto 24px;
-  padding: 16px;
-  background-color: #f0f8ff;
-  border: 1px solid #90caf9;
-  border-radius: 8px;
-  text-align: center;
-  color: #1565c0;
-  line-height: 1.7;
-}
-
-/* TimeSlotPage専用：下部ボタンの幅を揃える */
-.time-slot-page .button-group {
-  width: 100%;
-  max-width: none;
-  margin: 0 auto;
-}
-
-.time-slot-page .button-group .btn-primary,
-.time-slot-page .button-group .btn-secondary {
-  width: 100%;
-  max-width: none;
-  box-sizing: border-box;
 }

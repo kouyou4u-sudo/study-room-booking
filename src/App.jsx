@@ -1,21 +1,17 @@
 import { useState } from 'react';
 import './App.css';
 
-// ページコンポーネント
 import TopPage from './pages/TopPage';
 import ReservationPage from './pages/ReservationPage';
 import DateSelectPage from './pages/DateSelectPage';
-import TimeSlotPage from './pages/TimeSlotPage';
 import SeatMapPage from './pages/SeatMapPage';
+import TimeSlotPage from './pages/TimeSlotPage';
 import ReservationFormPage from './pages/ReservationFormPage';
 import ConfirmPage from './pages/ConfirmPage';
 import CompletePage from './pages/CompletePage';
 
 function App() {
-  // 画面遷移を管理するステート
   const [currentPage, setCurrentPage] = useState('top');
-
-  // 予約データを管理するステート
   const [reservationData, setReservationData] = useState({
     date: null,
     timeSlots: [],
@@ -27,77 +23,72 @@ function App() {
     note: '',
   });
 
-  // ページレンダリング
   const renderPage = () => {
     switch (currentPage) {
       case 'top':
         return <TopPage onNavigate={setCurrentPage} />;
-      
+
       case 'reservation':
         return (
-          <ReservationPage 
+          <ReservationPage
             onNavigate={setCurrentPage}
             reservationData={reservationData}
             setReservationData={setReservationData}
           />
         );
-      
+
       case 'dateSelect':
         return (
-          <DateSelectPage 
+          <DateSelectPage
             onNavigate={setCurrentPage}
             reservationData={reservationData}
           />
         );
-      
-      case 'timeSlot':
-        return (
-          <TimeSlotPage 
-            onNavigate={setCurrentPage}
-            reservationData={reservationData}
-            setReservationData={setReservationData}
-          />
-        );
-      
+
       case 'seatMap':
         return (
-          <SeatMapPage 
+          <SeatMapPage
             onNavigate={setCurrentPage}
             reservationData={reservationData}
             setReservationData={setReservationData}
           />
         );
-      
+
+      case 'timeSlot':
+        return (
+          <TimeSlotPage
+            onNavigate={setCurrentPage}
+            reservationData={reservationData}
+            setReservationData={setReservationData}
+          />
+        );
+
       case 'form':
         return (
-          <ReservationFormPage 
+          <ReservationFormPage
             onNavigate={setCurrentPage}
             reservationData={reservationData}
             setReservationData={setReservationData}
           />
         );
-      
+
       case 'confirm':
         return (
-          <ConfirmPage 
+          <ConfirmPage
             onNavigate={setCurrentPage}
             reservationData={reservationData}
           />
         );
-      
+
       case 'complete':
         return <CompletePage onNavigate={setCurrentPage} />;
-      
+
       default:
         return <TopPage onNavigate={setCurrentPage} />;
     }
   };
 
-  return (
-    <div className="app">
-      {renderPage()}
-    </div>
-  );
+  return <div className="app">{renderPage()}</div>;
 }
 
 export default App;

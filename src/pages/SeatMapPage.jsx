@@ -1,19 +1,42 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SeatMap from '../components/SeatMap';
-import { getFullyReservedSeats } from '../data/timeSlots';
-import '../styles/SeatMapPage.css';
+import './styles/SeatMapPage.css';
 
 function SeatMapPage({ onNavigate, reservationData, setReservationData }) {
   const [selectedSeat, setSelectedSeat] = useState(reservationData.seat);
-  const reservedSeats = getFullyReservedSeats();
+  const [reservedSeats, setReservedSeats] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // APIから予約済み座席を取得
+  useEffect(() => {
+    if (!reservationData.date || !reservationData.timeSlot) {
+      setLoading(false);
+      return;
+    }
+
+    const fetchReservedSeats = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/reservations/seats?date=${reservationData.date}&time_slot=${encodeURIComponent(reservationData.timeSlot)}`
+        );
+        const data = await response.json();
+        setReservedSeats(data.booked_seats || []);
+      } catch (error) {
+        console.error('Error fetching reserved seats:', error);
+        setReservedSeats([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReservedSeats();
+  }, [reservationData.date, reservationData.timeSlot]);
 
   const handleSelectSeat = (seatNumber) => {
     setSelectedSeat(seatNumber);
     setReservationData((prevData) => ({
       ...prevData,
       seat: seatNumber,
-      // Reset time slots only when the user changes the seat.
-      timeSlots: prevData.seat === seatNumber ? prevData.timeSlots : [],
     }));
   };
 
@@ -23,11 +46,15 @@ function SeatMapPage({ onNavigate, reservationData, setReservationData }) {
     }
   };
 
+  if (loading) {
+    return <div className="seat-map-page"><p>読み込み中...</p></div>;
+  }
+
   return (
     <div className="seat-map-page">
       <h1>座席を選ぶ</h1>
       <p className="subtitle">
-        先に座席を選ぶと、その座席で予約可能な時間帯だけを確認できます。
+        前の座席を選ぶと、その座席で予約可能な時間帯だけ確認できます。
       </p>
 
       <div className="map-container">
@@ -41,12 +68,11 @@ function SeatMapPage({ onNavigate, reservationData, setReservationData }) {
       <div className="selection-info">
         {selectedSeat ? (
           <p>
-            選択中の座席: <strong>{selectedSeat}番</strong>
+            選択中の座席：<strong>{selectedSeat}番</strong>
           </p>
         ) : (
           <p>座席を1つ選ぶと次へ進めます。</p>
         )}
-        <p className="reserved-note">グレーの座席は、この日程では終日満席です。</p>
       </div>
 
       <div className="button-group">

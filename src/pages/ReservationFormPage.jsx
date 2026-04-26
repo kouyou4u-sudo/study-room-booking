@@ -1,63 +1,133 @@
 import { useState } from 'react';
-import { RESERVATION_RULES } from '../data/reservationRules';
 import '../styles/ReservationFormPage.css';
 
 function ReservationFormPage({ onNavigate, reservationData, setReservationData }) {
   const [agreedToRules, setAgreedToRules] = useState(false);
 
+  const grades = [
+    '小学生',
+    '中1生',
+    '中2生',
+    '中3生',
+    '高1生',
+    '高2生',
+    '高3生',
+    '既卒生',
+    '大学生',
+    '社会人',
+  ];
+
+  const usageTypes = [
+    '在塾生',
+    '自習室会員',
+    '無料体験',
+  ];
+
+  const usageRules = [
+    '実習室は、本日から14日先まで予約できます。',
+    '予約は、在塾生・自習室会員・無料体験の方のみ利用できます。',
+    '利用時間は13:00〜21:55です。',
+    '1コマは55分です。',
+    '各コマの間に5分間の入れ替え時間があります。',
+    '利用後は、机の整理整頓・清掃を行ってから退出してください。',
+  ];
+
+  const confirmationRules = [
+    'この申込みは仮予約です。',
+    '入力したメールアドレス宛に確認メールを送信します。',
+    'メール内の確認リンクを30分以内にクリックすると、本予約が確定します。',
+    '30分以内に確認されない場合、仮予約は自動的に無効になります。',
+    'メールが届かない場合は、メールアドレスを確認のうえ、再度お申込みください。',
+    '迷惑メールフォルダに入る場合がありますので、あわせてご確認ください。',
+  ];
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    setReservationData({ ...reservationData, [name]: value });
+
+    setReservationData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleConfirm = () => {
-    if (reservationData.studentName && reservationData.email && agreedToRules) {
-      onNavigate('confirm');
+  const studentName = reservationData.studentName || '';
+  const grade = reservationData.grade || '';
+  const usageType = reservationData.usageType || '';
+  const email = reservationData.email || '';
+  const phone = reservationData.phone || '';
+
+  const isComplete = Boolean(
+    studentName.trim() &&
+      grade &&
+      usageType &&
+      email.trim() &&
+      agreedToRules
+  );
+
+  const handleConfirm = (event) => {
+    event.preventDefault();
+
+    if (!isComplete) {
+      return;
     }
-  };
 
-  const isComplete = reservationData.studentName && reservationData.email && agreedToRules;
+    onNavigate('confirm');
+  };
 
   return (
     <div className="form-page">
-      <h1>予約情報を入力</h1>
-      <p className="subtitle">利用者情報を入力してください。</p>
+      <h1>仮予約情報を入力</h1>
+
+      <p className="subtitle">
+        本予約の確定にはメール確認が必要です。仮予約のために必要な情報を入力してください。
+      </p>
 
       <div className="form-container">
-        <form className="reservation-form">
+        <form className="reservation-form" onSubmit={handleConfirm}>
           <div className="form-group">
             <label htmlFor="studentName">氏名 *</label>
             <input
               type="text"
               id="studentName"
               name="studentName"
-              value={reservationData.studentName}
+              value={studentName}
               onChange={handleInputChange}
               placeholder="山田 太郎"
+              autoComplete="name"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="grade">学年</label>
+            <label htmlFor="grade">学年 *</label>
             <select
               id="grade"
               name="grade"
-              value={reservationData.grade}
+              value={grade}
               onChange={handleInputChange}
             >
               <option value="">選択してください</option>
-              <option value="小学1年">小学1年</option>
-              <option value="小学2年">小学2年</option>
-              <option value="小学3年">小学3年</option>
-              <option value="小学4年">小学4年</option>
-              <option value="小学5年">小学5年</option>
-              <option value="小学6年">小学6年</option>
-              <option value="中学1年">中学1年</option>
-              <option value="中学2年">中学2年</option>
-              <option value="中学3年">中学3年</option>
-              <option value="高校1年">高校1年</option>
-              <option value="高校2年">高校2年</option>
-              <option value="高校3年">高校3年</option>
+              {grades.map((gradeOption) => (
+                <option key={gradeOption} value={gradeOption}>
+                  {gradeOption}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="usageType">利用区分 *</label>
+            <select
+              id="usageType"
+              name="usageType"
+              value={usageType}
+              onChange={handleInputChange}
+            >
+              <option value="">選択してください</option>
+              {usageTypes.map((usageTypeOption) => (
+                <option key={usageTypeOption} value={usageTypeOption}>
+                  {usageTypeOption}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -67,33 +137,26 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               type="email"
               id="email"
               name="email"
-              value={reservationData.email}
+              value={email}
               onChange={handleInputChange}
               placeholder="example@gmail.com"
+              autoComplete="email"
             />
+            <p className="field-note">
+              確認メールを受信できるメールアドレスを入力してください。
+            </p>
           </div>
 
           <div className="form-group">
-            <label htmlFor="phone">電話番号</label>
+            <label htmlFor="phone">電話番号（任意）</label>
             <input
               type="tel"
               id="phone"
               name="phone"
-              value={reservationData.phone}
+              value={phone}
               onChange={handleInputChange}
               placeholder="090-1234-5678"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="note">備考</label>
-            <textarea
-              id="note"
-              name="note"
-              value={reservationData.note}
-              onChange={handleInputChange}
-              placeholder="伝えておきたいことがあれば入力してください"
-              rows="4"
+              autoComplete="tel"
             />
           </div>
 
@@ -104,35 +167,45 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               checked={agreedToRules}
               onChange={(event) => setAgreedToRules(event.target.checked)}
             />
-            <label htmlFor="agreeToRules">利用ルールに同意する</label>
+            <label htmlFor="agreeToRules">
+              利用ルール・予約確認事項に同意する
+            </label>
           </div>
 
           <div className="rules-preview">
             <h3>利用ルール</h3>
             <ul>
-              {RESERVATION_RULES.slice(0, 5).map((rule, index) => (
-                <li key={index}>{rule}</li>
+              {usageRules.map((rule) => (
+                <li key={rule}>{rule}</li>
               ))}
             </ul>
-            <p className="rules-note">全ルール詳細は画面下でも確認できます。</p>
+
+            <h3>予約確認について</h3>
+            <ul>
+              {confirmationRules.map((rule) => (
+                <li key={rule}>{rule}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="button-group">
+            <button
+              type="submit"
+              disabled={!isComplete}
+              className="btn btn-primary"
+            >
+              仮予約内容を確認する
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('timeSlot')}
+              className="btn btn-secondary"
+            >
+              戻る
+            </button>
           </div>
         </form>
-      </div>
-
-      <div className="button-group">
-        <button
-          onClick={handleConfirm}
-          disabled={!isComplete}
-          className="btn btn-primary"
-        >
-          予約内容を確認する
-        </button>
-        <button
-          onClick={() => onNavigate('timeSlot')}
-          className="btn btn-secondary"
-        >
-          戻る
-        </button>
       </div>
     </div>
   );

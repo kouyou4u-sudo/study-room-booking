@@ -12,15 +12,16 @@ import CompletePage from './pages/CompletePage';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('top');
+
   const [reservationData, setReservationData] = useState({
     date: null,
     timeSlots: [],
     seat: null,
     studentName: '',
     grade: '',
+    usageType: '',
     email: '',
     phone: '',
-    note: '',
   });
 
   const renderPage = () => {

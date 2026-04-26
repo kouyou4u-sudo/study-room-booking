@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import './styles/ConfirmPage.css';
+// import './styles/ConfirmPage.css';
 
 function ConfirmPage({ onNavigate, reservationData }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -19,6 +19,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify({
           student_name: reservationData.studentName,
@@ -26,19 +27,30 @@ function ConfirmPage({ onNavigate, reservationData }) {
           email: reservationData.email,
           phone: reservationData.phone || null,
           date: reservationData.date,
-          time_slot: reservationData.timeSlot,
+          time_slot: selectedTimeSlotsText,
           seat_number: reservationData.seat,
           note: reservationData.note || null,
         }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || '予約に失敗しました');
+      const contentType = response.headers.get('content-type');
+
+      let responseData = null;
+
+      if (contentType && contentType.includes('application/json')) {
+        responseData = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('JSON以外のレスポンス:', text);
+        throw new Error('サーバーからJSON以外のレスポンスが返ってきました');
       }
 
-      const data = await response.json();
-      console.log('予約成功:', data);
+      if (!response.ok) {
+        console.error('予約APIエラー:', responseData);
+        throw new Error(responseData.message || responseData.error || '予約に失敗しました');
+      }
+
+      console.log('予約成功:', responseData);
       onNavigate('complete');
     } catch (err) {
       console.error('Error:', err);
@@ -56,14 +68,21 @@ function ConfirmPage({ onNavigate, reservationData }) {
       <div className="confirm-container">
         <div className="confirm-section">
           <h2>予約内容</h2>
+
           <div className="confirm-item">
             <label>日付</label>
-            <p>{reservationData.date ? new Date(reservationData.date).toLocaleDateString('ja-JP') : '-'}</p>
+            <p>
+              {reservationData.date
+                ? new Date(reservationData.date).toLocaleDateString('ja-JP')
+                : '-'}
+            </p>
           </div>
+
           <div className="confirm-item">
             <label>時間帯</label>
             <p>{selectedTimeSlotsText}</p>
           </div>
+
           <div className="confirm-item">
             <label>座席</label>
             <p>{reservationData.seat || '-'}</p>
@@ -72,22 +91,27 @@ function ConfirmPage({ onNavigate, reservationData }) {
 
         <div className="confirm-section">
           <h2>利用者情報</h2>
+
           <div className="confirm-item">
             <label>氏名</label>
             <p>{reservationData.studentName || '-'}</p>
           </div>
+
           <div className="confirm-item">
             <label>学年</label>
             <p>{reservationData.grade || '-'}</p>
           </div>
+
           <div className="confirm-item">
             <label>メールアドレス</label>
             <p>{reservationData.email || '-'}</p>
           </div>
+
           <div className="confirm-item">
             <label>電話番号</label>
             <p>{reservationData.phone || '-'}</p>
           </div>
+
           {reservationData.note && (
             <div className="confirm-item">
               <label>備考</label>
@@ -95,33 +119,34 @@ function ConfirmPage({ onNavigate, reservationData }) {
             </div>
           )}
         </div>
+      </div>
 
-        <div className="confirm-notice">
-          <p>送信後は仮予約として受け付けます。必要に応じて後ほどご案内します。</p>
+      <div className="confirm-notice">
+        <p>送信後は仮予約として受け付けます。必要に応じて後ほどご案内します。</p>
+      </div>
+
+      {error && (
+        <div className="confirm-error">
+          <p>{error}</p>
         </div>
+      )}
 
-        {error && (
-          <div className="confirm-error">
-            <p>{error}</p>
-          </div>
-        )}
+      <div className="button-group">
+        <button
+          onClick={handleConfirm}
+          disabled={isSubmitting}
+          className="btn-primary"
+        >
+          {isSubmitting ? '予約中...' : '予約を確定する'}
+        </button>
 
-        <div className="button-group">
-          <button
-            onClick={handleConfirm}
-            disabled={isSubmitting}
-            className="btn-primary"
-          >
-            {isSubmitting ? '予約中...' : '予約を確定する'}
-          </button>
-          <button
-            onClick={() => onNavigate('form')}
-            disabled={isSubmitting}
-            className="btn-secondary"
-          >
-            戻る
-          </button>
-        </div>
+        <button
+          onClick={() => onNavigate('form')}
+          disabled={isSubmitting}
+          className="btn-secondary"
+        >
+          戻る
+        </button>
       </div>
     </div>
   );

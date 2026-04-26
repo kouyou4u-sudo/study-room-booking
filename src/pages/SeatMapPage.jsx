@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import SeatMap from '../components/SeatMap';
-import './styles/SeatMapPage.css';
+// import './styles/SeatMapPage.css';
 
 function SeatMapPage({ onNavigate, reservationData, setReservationData }) {
   const [selectedSeat, setSelectedSeat] = useState(reservationData.seat);

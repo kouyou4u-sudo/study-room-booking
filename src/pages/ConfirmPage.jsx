@@ -5,9 +5,13 @@ function ConfirmPage({ onNavigate, reservationData }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
+  const selectedTimeSlots = Array.isArray(reservationData.timeSlots)
+    ? reservationData.timeSlots
+    : [];
+
   const selectedTimeSlotsText =
-    reservationData.timeSlots && reservationData.timeSlots.length > 0
-      ? reservationData.timeSlots.join(' / ')
+    selectedTimeSlots.length > 0
+      ? selectedTimeSlots.join(' / ')
       : '-';
 
   const formattedDate = reservationData.date
@@ -19,7 +23,19 @@ function ConfirmPage({ onNavigate, reservationData }) {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:8000/api/reservations', {
+      if (!reservationData.date) {
+        throw new Error('予約日が選択されていません。');
+      }
+
+      if (!reservationData.seat) {
+        throw new Error('座席が選択されていません。');
+      }
+
+      if (selectedTimeSlots.length === 0) {
+        throw new Error('時間帯が選択されていません。');
+      }
+
+      const response = await fetch('http://127.0.0.1:8000/api/reservations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -32,14 +48,13 @@ function ConfirmPage({ onNavigate, reservationData }) {
           email: reservationData.email,
           phone: reservationData.phone || null,
           date: reservationData.date,
-          time_slot: selectedTimeSlotsText,
+          time_slots: selectedTimeSlots,
           seat_number: reservationData.seat,
           note: null,
         }),
       });
 
       const contentType = response.headers.get('content-type');
-
       let responseData = null;
 
       if (contentType && contentType.includes('application/json')) {
@@ -47,14 +62,21 @@ function ConfirmPage({ onNavigate, reservationData }) {
       } else {
         const text = await response.text();
         console.error('JSON以外のレスポンス:', text);
-        throw new Error('サーバーからJSON以外のレスポンスが返ってきました。');
+        throw new Error('サーバーから想定外のレスポンスが返されました。');
       }
 
       if (!response.ok) {
         console.error('予約APIエラー:', responseData);
+
+        if (response.status === 409 && responseData?.conflicted_time_slots?.length) {
+          throw new Error(
+            `以下の時間帯はすでに予約されています：${responseData.conflicted_time_slots.join(' / ')}`
+          );
+        }
+
         throw new Error(
-          responseData.message ||
-            responseData.error ||
+          responseData?.message ||
+            responseData?.error ||
             '仮予約メールの送信に失敗しました。'
         );
       }
@@ -74,7 +96,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
       <h1>仮予約内容を確認</h1>
 
       <p className="subtitle">
-        内容をご確認のうえ、仮予約メールを送信してください。
+        内容をご確認の上、仮予約メールを送信してください。
       </p>
 
       <div className="confirm-container">

@@ -22,23 +22,22 @@ function WeekCalendar({ weekStart, today, onSelectDate }) {
     return `${day}日（${dayOfWeek}）`;
   };
 
-  // 空き状況をダミーで返す（後で API から取得）
-  const getAvailability = (date) => {
-    const random = Math.random();
-    if (random > 0.7) return '×'; // 満席
-    if (random > 0.4) return '△'; // 残りわずか
-    return '○'; // 空きあり
+  // MVPでは日付単位の空き状況は全日「空きあり」として表示する
+  // 実際の満席判定は、座席・時間帯選択時にAPI側で行う
+  const getAvailability = () => {
+    return '○';
   };
 
   return (
     <div className="week-calendar">
       <div className="calendar-grid">
         {weekDates.map((date) => {
-          const dateKey = date.toISOString().split('T')[0]; // YYYY-MM-DD形式
+          const dateKey = date.toISOString().split('T')[0];
+
           return (
             <div key={dateKey} className="calendar-day">
               <div className="date-label">{formatDate(date)}</div>
-              <div className="status-icon">{getAvailability(date)}</div>
+              <div className="status-icon">{getAvailability()}</div>
               <button
                 onClick={() => onSelectDate(date)}
                 className="btn-select"

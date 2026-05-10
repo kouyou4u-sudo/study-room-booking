@@ -10,19 +10,25 @@ import ReservationFormPage from './pages/ReservationFormPage';
 import ConfirmPage from './pages/ConfirmPage';
 import CompletePage from './pages/CompletePage';
 
+const getInitialReservationData = () => ({
+  date: null,
+  timeSlots: [],
+  seat: null,
+  studentName: '',
+  grade: '',
+  usageType: '',
+  email: '',
+  phone: '',
+});
+
 function App() {
   const [currentPage, setCurrentPage] = useState('top');
+  const [reservationData, setReservationData] = useState(getInitialReservationData);
 
-  const [reservationData, setReservationData] = useState({
-    date: null,
-    timeSlots: [],
-    seat: null,
-    studentName: '',
-    grade: '',
-    usageType: '',
-    email: '',
-    phone: '',
-  });
+  const handleResetToTop = () => {
+    setReservationData(getInitialReservationData());
+    setCurrentPage('top');
+  };
 
   const renderPage = () => {
     switch (currentPage) {
@@ -43,6 +49,7 @@ function App() {
           <DateSelectPage
             onNavigate={setCurrentPage}
             reservationData={reservationData}
+            onResetToTop={handleResetToTop}
           />
         );
 
@@ -52,6 +59,7 @@ function App() {
             onNavigate={setCurrentPage}
             reservationData={reservationData}
             setReservationData={setReservationData}
+            onResetToTop={handleResetToTop}
           />
         );
 
@@ -61,6 +69,7 @@ function App() {
             onNavigate={setCurrentPage}
             reservationData={reservationData}
             setReservationData={setReservationData}
+            onResetToTop={handleResetToTop}
           />
         );
 
@@ -70,6 +79,7 @@ function App() {
             onNavigate={setCurrentPage}
             reservationData={reservationData}
             setReservationData={setReservationData}
+            onResetToTop={handleResetToTop}
           />
         );
 
@@ -78,6 +88,7 @@ function App() {
           <ConfirmPage
             onNavigate={setCurrentPage}
             reservationData={reservationData}
+            onResetToTop={handleResetToTop}
           />
         );
 

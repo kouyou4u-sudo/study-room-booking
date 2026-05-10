@@ -1,44 +1,49 @@
 import { useState } from 'react';
 import '../styles/ReservationFormPage.css';
 
-function ReservationFormPage({ onNavigate, reservationData, setReservationData }) {
+function ReservationFormPage({
+  onNavigate,
+  reservationData,
+  setReservationData,
+  onResetToTop,
+}) {
   const [agreedToRules, setAgreedToRules] = useState(false);
 
   const grades = [
     '小学生',
-    '中1生',
-    '中2生',
-    '中3生',
-    '高1生',
-    '高2生',
-    '高3生',
+    '中学1年',
+    '中学2年',
+    '中学3年',
+    '高校1年',
+    '高校2年',
+    '高校3年',
     '既卒生',
     '大学生',
     '社会人',
   ];
 
   const usageTypes = [
-    '在塾生',
-    '自習室会員',
-    '無料体験',
+    '自習利用',
+    '資格試験対策',
+    '部活動・課題',
   ];
 
   const usageRules = [
-    '実習室は、本日から14日先まで予約できます。',
-    '予約は、在塾生・自習室会員・無料体験の方のみ利用できます。',
+    '予約は、利用日から14日先まで可能です。',
+    '予約枠は、自習利用・資格試験対策・部活動・課題の方のみ利用できます。',
     '利用時間は13:00〜21:55です。',
     '1コマは55分です。',
     '各コマの間に5分間の入れ替え時間があります。',
-    '利用後は、机の整理整頓・清掃を行ってから退出してください。',
+    '利用後は、机の消毒や整頓を行ってから退出してください。',
   ];
 
   const confirmationRules = [
     'この申込みは仮予約です。',
     '入力したメールアドレス宛に確認メールを送信します。',
-    'メール内の確認リンクを30分以内にクリックすると、本予約が確定します。',
-    '30分以内に確認されない場合、仮予約は自動的に無効になります。',
-    'メールが届かない場合は、メールアドレスを確認のうえ、再度お申込みください。',
-    '迷惑メールフォルダに入る場合がありますので、あわせてご確認ください。',
+    'メール内の確認リンクを30分以内にクリックすると、予約が確定します。',
+    '30分以内に確認されない場合、予約は自動的に無効になります。',
+    'メールが届かない場合は、迷惑メールフォルダも確認してください。',
+    '混雑時はメール反映まで少し時間がかかる場合があります。',
   ];
 
   const handleInputChange = (event) => {
@@ -76,10 +81,10 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
 
   return (
     <div className="form-page">
-      <h1>仮予約情報を入力</h1>
+      <h1>予約情報を入力</h1>
 
       <p className="subtitle">
-        本予約の確定にはメール確認が必要です。仮予約のために必要な情報を入力してください。
+        本予約の確認にはメール認証が必要です。必要事項を入力して確認へ進んでください。
       </p>
 
       <div className="form-container">
@@ -143,7 +148,7 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               autoComplete="email"
             />
             <p className="field-note">
-              確認メールを受信できるメールアドレスを入力してください。
+              確認メールを受け取れるメールアドレスを入力してください。
             </p>
           </div>
 
@@ -180,7 +185,7 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               ))}
             </ul>
 
-            <h3>予約確認について</h3>
+            <h3>予約確認事項について</h3>
             <ul>
               {confirmationRules.map((rule) => (
                 <li key={rule}>{rule}</li>
@@ -194,16 +199,25 @@ function ReservationFormPage({ onNavigate, reservationData, setReservationData }
               disabled={!isComplete}
               className="btn btn-primary"
             >
-              仮予約内容を確認する
+              予約内容を確認する
             </button>
 
-            <button
-              type="button"
-              onClick={() => onNavigate('timeSlot')}
-              className="btn btn-secondary"
-            >
-              戻る
-            </button>
+            <div className="sub-action-buttons">
+              <button
+                type="button"
+                onClick={() => onNavigate('timeSlot')}
+                className="btn btn-secondary"
+              >
+                戻る
+              </button>
+              <button
+                type="button"
+                onClick={onResetToTop}
+                className="btn btn-secondary"
+              >
+                最初に戻る
+              </button>
+            </div>
           </div>
         </form>
       </div>

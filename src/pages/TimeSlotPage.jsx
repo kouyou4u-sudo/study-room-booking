@@ -1,7 +1,12 @@
 import { getTimeSlotsBySeat } from '../data/timeSlots';
 import '../styles/TimeSlotPage.css';
 
-function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
+function TimeSlotPage({
+  onNavigate,
+  reservationData,
+  setReservationData,
+  onResetToTop,
+}) {
   const selectedSeat = reservationData.seat;
   const seatTimeSlots = selectedSeat ? getTimeSlotsBySeat(selectedSeat) : [];
   const selectedTimeSlots = reservationData.timeSlots || [];
@@ -34,12 +39,12 @@ function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
       <p className="subtitle">
         {selectedSeat
           ? `座席${selectedSeat}番で予約できる時間帯から、利用したいコマを複数選択できます。`
-          : '先に座席を選んでください。'}
+          : '先に座席を選択してください。'}
       </p>
 
       {selectedSeat && (
         <div className="selected-seat-summary">
-          <p>選択中の座席: {selectedSeat}番</p>
+          <p>選択中の座席：{selectedSeat}番</p>
         </div>
       )}
 
@@ -77,7 +82,7 @@ function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
       </div>
 
       <div className="selected-time-summary">
-        <p>選択中: {selectedTimeSlots.length}コマ</p>
+        <p>選択中：{selectedTimeSlots.length}コマ</p>
         {selectedTimeSlots.length > 0 ? (
           <p>{selectedTimeSlots.join(' / ')}</p>
         ) : (
@@ -87,6 +92,7 @@ function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
 
       <div className="button-group">
         <button
+          type="button"
           onClick={handleNext}
           disabled={selectedTimeSlots.length === 0}
           className="btn-primary"
@@ -94,12 +100,22 @@ function TimeSlotPage({ onNavigate, reservationData, setReservationData }) {
           予約情報を入力する
         </button>
 
-        <button
-          onClick={() => onNavigate('seatMap')}
-          className="btn-secondary"
-        >
-          戻る
-        </button>
+        <div className="sub-action-buttons">
+          <button
+            type="button"
+            onClick={() => onNavigate('seatMap')}
+            className="btn-secondary"
+          >
+            戻る
+          </button>
+          <button
+            type="button"
+            onClick={onResetToTop}
+            className="btn-secondary"
+          >
+            最初に戻る
+          </button>
+        </div>
       </div>
     </div>
   );

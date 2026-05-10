@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import '../styles/ConfirmPage.css';
 
-function ConfirmPage({ onNavigate, reservationData }) {
+function ConfirmPage({ onNavigate, reservationData, onResetToTop }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
@@ -10,9 +10,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
     : [];
 
   const selectedTimeSlotsText =
-    selectedTimeSlots.length > 0
-      ? selectedTimeSlots.join(' / ')
-      : '-';
+    selectedTimeSlots.length > 0 ? selectedTimeSlots.join(' / ') : '-';
 
   const formattedDate = reservationData.date
     ? new Date(reservationData.date).toLocaleDateString('ja-JP')
@@ -24,7 +22,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
 
     try {
       if (!reservationData.date) {
-        throw new Error('予約日が選択されていません。');
+        throw new Error('利用日が選択されていません。');
       }
 
       if (!reservationData.seat) {
@@ -35,24 +33,27 @@ function ConfirmPage({ onNavigate, reservationData }) {
         throw new Error('時間帯が選択されていません。');
       }
 
-      const response = await fetch('https://study-room-booking-api.onrender.com/api/reservations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          student_name: reservationData.studentName,
-          grade: reservationData.grade,
-          usage_type: reservationData.usageType,
-          email: reservationData.email,
-          phone: reservationData.phone || null,
-          date: reservationData.date,
-          time_slots: selectedTimeSlots,
-          seat_number: reservationData.seat,
-          note: null,
-        }),
-      });
+      const response = await fetch(
+        'https://study-room-booking-api.onrender.com/api/reservations',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+          },
+          body: JSON.stringify({
+            student_name: reservationData.studentName,
+            grade: reservationData.grade,
+            usage_type: reservationData.usageType,
+            email: reservationData.email,
+            phone: reservationData.phone || null,
+            date: reservationData.date,
+            time_slots: selectedTimeSlots,
+            seat_number: reservationData.seat,
+            note: null,
+          }),
+        }
+      );
 
       const contentType = response.headers.get('content-type');
       let responseData = null;
@@ -61,7 +62,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
         responseData = await response.json();
       } else {
         const text = await response.text();
-        console.error('JSON以外のレスポンス:', text);
+        console.error('JSONではないレスポンス:', text);
         throw new Error('サーバーから想定外のレスポンスが返されました。');
       }
 
@@ -70,22 +71,22 @@ function ConfirmPage({ onNavigate, reservationData }) {
 
         if (response.status === 409 && responseData?.conflicted_time_slots?.length) {
           throw new Error(
-            `以下の時間帯はすでに予約されています：${responseData.conflicted_time_slots.join(' / ')}`
+            `以下の時間帯はすでに予約されています: ${responseData.conflicted_time_slots.join(' / ')}`
           );
         }
 
         throw new Error(
           responseData?.message ||
             responseData?.error ||
-            '仮予約メールの送信に失敗しました。'
+            '予約確認メールの送信に失敗しました。'
         );
       }
 
-      console.log('仮予約受付成功:', responseData);
+      console.log('予約仮受付完了:', responseData);
       onNavigate('complete');
     } catch (err) {
       console.error('Error:', err);
-      setError(err.message || '仮予約処理中にエラーが発生しました。');
+      setError(err.message || '予約中にエラーが発生しました。');
     } finally {
       setIsSubmitting(false);
     }
@@ -96,7 +97,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
       <h1>仮予約内容を確認</h1>
 
       <p className="subtitle">
-        内容をご確認の上、仮予約メールを送信してください。
+        内容を確認のうえ、仮予約メールを送信してください。
       </p>
 
       <div className="confirm-container">
@@ -153,7 +154,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
             この申込みはまだ本予約ではありません。送信後、入力したメールアドレス宛に確認メールを送信します。
           </p>
           <p>
-            メール内の確認リンクを30分以内にクリックすると、本予約が確定します。
+            メール内の確認リンクを30分以内にクリックすると、予約が確定します。
           </p>
         </div>
 
@@ -165,6 +166,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
 
         <div className="button-group">
           <button
+            type="button"
             onClick={handleConfirm}
             disabled={isSubmitting}
             className="btn btn-primary"
@@ -172,13 +174,24 @@ function ConfirmPage({ onNavigate, reservationData }) {
             {isSubmitting ? '送信中...' : '仮予約メールを送信する'}
           </button>
 
-          <button
-            onClick={() => onNavigate('form')}
-            disabled={isSubmitting}
-            className="btn btn-secondary"
-          >
-            戻る
-          </button>
+          <div className="sub-action-buttons">
+            <button
+              type="button"
+              onClick={() => onNavigate('form')}
+              disabled={isSubmitting}
+              className="btn btn-secondary"
+            >
+              戻る
+            </button>
+            <button
+              type="button"
+              onClick={onResetToTop}
+              disabled={isSubmitting}
+              className="btn btn-secondary"
+            >
+              最初に戻る
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import '../styles/DateSelectPage.css';
 
-function DateSelectPage({ onNavigate, reservationData }) {
+function DateSelectPage({ onNavigate, reservationData, onResetToTop }) {
   const formatSelectedDate = () => {
     if (!reservationData.date) return '-';
 
@@ -14,7 +14,7 @@ function DateSelectPage({ onNavigate, reservationData }) {
   return (
     <div className="date-select-page">
       <h1>日付を確認</h1>
-      <p className="subtitle">選択した日付で予約を進めます</p>
+      <p className="subtitle">選択した利用日を確認してください。</p>
 
       <div className="selected-date-display">
         <p className="selected-date-label">選択中の日付</p>
@@ -25,17 +25,29 @@ function DateSelectPage({ onNavigate, reservationData }) {
 
       <div className="button-group">
         <button
+          type="button"
           onClick={() => onNavigate('seatMap')}
           className="btn btn-primary"
         >
           この日付で座席を選ぶ
         </button>
-        <button
-          onClick={() => onNavigate('reservation')}
-          className="btn btn-secondary"
-        >
-          戻る
-        </button>
+
+        <div className="sub-action-buttons">
+          <button
+            type="button"
+            onClick={() => onNavigate('reservation')}
+            className="btn btn-secondary"
+          >
+            戻る
+          </button>
+          <button
+            type="button"
+            onClick={onResetToTop}
+            className="btn btn-secondary"
+          >
+            最初に戻る
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -1,13 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import SeatMap from '../components/SeatMap';
-// import './styles/SeatMapPage.css';
+import '../styles/SeatMapPage.css';
 
-function SeatMapPage({ onNavigate, reservationData, setReservationData }) {
+function SeatMapPage({
+  onNavigate,
+  reservationData,
+  setReservationData,
+  onResetToTop,
+}) {
   const [selectedSeat, setSelectedSeat] = useState(reservationData.seat);
   const [reservedSeats, setReservedSeats] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // APIから予約済み座席を取得
   useEffect(() => {
     if (!reservationData.date || !reservationData.timeSlot) {
       setLoading(false);
@@ -47,14 +51,18 @@ function SeatMapPage({ onNavigate, reservationData, setReservationData }) {
   };
 
   if (loading) {
-    return <div className="seat-map-page"><p>読み込み中...</p></div>;
+    return (
+      <div className="seat-map-page">
+        <p>読み込み中...</p>
+      </div>
+    );
   }
 
   return (
     <div className="seat-map-page">
       <h1>座席を選ぶ</h1>
       <p className="subtitle">
-        前の座席を選ぶと、その座席で予約可能な時間帯だけ確認できます。
+        希望する座席を選ぶと、その座席で予約できる時間帯を確認できます。
       </p>
 
       <div className="map-container">
@@ -77,18 +85,30 @@ function SeatMapPage({ onNavigate, reservationData, setReservationData }) {
 
       <div className="button-group">
         <button
+          type="button"
           onClick={handleConfirm}
           disabled={!selectedSeat}
           className="btn-primary"
         >
           この座席で時間帯を選ぶ
         </button>
-        <button
-          onClick={() => onNavigate('dateSelect')}
-          className="btn-secondary"
-        >
-          戻る
-        </button>
+
+        <div className="sub-action-buttons">
+          <button
+            type="button"
+            onClick={() => onNavigate('dateSelect')}
+            className="btn-secondary"
+          >
+            戻る
+          </button>
+          <button
+            type="button"
+            onClick={onResetToTop}
+            className="btn-secondary"
+          >
+            最初に戻る
+          </button>
+        </div>
       </div>
     </div>
   );

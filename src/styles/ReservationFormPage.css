@@ -86,6 +86,12 @@
   font-weight: normal;
 }
 
+.field-note {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 8px;
+}
+
 .rules-preview {
   background-color: #fff;
   padding: 20px;
@@ -113,40 +119,48 @@
   line-height: 1.6;
 }
 
-.rules-note {
-  font-size: 0.8rem;
-  color: #999;
-  margin-top: 10px;
-  margin-bottom: 0;
-}
-
 .button-group {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-top: 20px;
+  width: 100%;
+}
+
+.sub-action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
 }
 
 @media (min-width: 600px) {
   .button-group {
+    gap: 15px;
+  }
+
+  .sub-action-buttons {
     flex-direction: row;
-    justify-content: center;
     gap: 15px;
   }
 }
 
-.btn-primary {
+.btn-primary,
+.btn-secondary {
+  width: 100%;
+  box-sizing: border-box;
   padding: 14px 20px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: bold;
   min-height: 48px;
-  transition: background-color 0.3s ease;
-  flex: 1;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
 }
 
 .btn-primary:hover:not(:disabled) {
@@ -159,69 +173,12 @@
 }
 
 .btn-secondary {
-  padding: 14px 20px;
   background-color: #f0f0f0;
   border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  min-height: 48px;
+  color: #333;
   flex: 1;
 }
 
 .btn-secondary:hover {
   background-color: #e0e0e0;
-}
-
-/* =========================================================
-   [修正] ReservationFormPage専用：ボタン幅を揃える
-   目的:
-   - 他ページの .btn-primary / .btn-secondary の影響を受けないようにする
-   - 「予約内容を確認する」と「戻る」の横幅を揃える
-========================================================= */
-
-.form-page .button-group {
-  width: 100%;
-  max-width: none;
-  margin: 20px auto 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.form-page .button-group .btn,
-.form-page .button-group .btn-primary,
-.form-page .button-group .btn-secondary {
-  width: 100%;
-  max-width: none;
-  box-sizing: border-box;
-  display: block;
-  flex: none;
-  min-height: 48px;
-  padding: 14px 20px;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-/* 確認ボタン */
-.form-page .button-group .btn-primary {
-  background-color: #007bff;
-  color: white;
-  border: none;
-}
-
-/* 無効時 */
-.form-page .button-group .btn-primary:disabled {
-  background-color: #ccc;
-  color: white;
-  cursor: not-allowed;
-}
-
-/* 戻るボタン */
-.form-page .button-group .btn-secondary {
-  background-color: #2196f3;
-  color: white;
-  border: none;
 }

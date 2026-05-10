@@ -23,6 +23,7 @@ function TimeSlotPage({
   const selectedTimeSlots = Array.isArray(reservationData.timeSlots)
     ? sortTimeSlots(reservationData.timeSlots)
     : [];
+  const selectedTimeSlotCount = selectedTimeSlots.length;
 
   const handleToggleTimeSlot = (slot) => {
     if (!slot.isAvailable) {
@@ -46,7 +47,7 @@ function TimeSlotPage({
   };
 
   const handleNext = () => {
-    if (selectedTimeSlots.length > 0) {
+    if (selectedTimeSlotCount > 0) {
       onNavigate('form');
     }
   };
@@ -104,8 +105,8 @@ function TimeSlotPage({
       </div>
 
       <div className="selected-time-summary">
-        <p>選択中：{selectedTimeSlots.length}コマ</p>
-        {selectedTimeSlots.length > 0 ? (
+        <p>選択中：{selectedTimeSlotCount}コマ</p>
+        {selectedTimeSlotCount > 0 ? (
           <p>{selectedTimeSlots.join(' / ')}</p>
         ) : (
           <p>時間帯を1つ以上選んでください。</p>
@@ -116,7 +117,7 @@ function TimeSlotPage({
         <button
           type="button"
           onClick={handleNext}
-          disabled={selectedTimeSlots.length === 0}
+          disabled={selectedTimeSlotCount === 0}
           className="btn-primary"
         >
           予約情報を入力する

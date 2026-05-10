@@ -35,7 +35,7 @@ function ConfirmPage({ onNavigate, reservationData }) {
         throw new Error('時間帯が選択されていません。');
       }
 
-      const response = await fetch('http://127.0.0.1:8000/api/reservations', {
+      const response = await fetch('https://study-room-booking-api.onrender.com/api/reservations', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

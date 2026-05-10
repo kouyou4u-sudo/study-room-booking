@@ -1,5 +1,16 @@
-import { getTimeSlotsBySeat } from '../data/timeSlots';
+import { getTimeSlotsBySeat, TIME_SLOTS } from '../data/timeSlots';
 import '../styles/TimeSlotPage.css';
+
+const timeSlotOrder = new Map(
+  TIME_SLOTS.map((slot, index) => [slot.label, index])
+);
+
+const sortTimeSlots = (timeSlots) =>
+  [...timeSlots].sort(
+    (a, b) =>
+      (timeSlotOrder.get(a) ?? Number.MAX_SAFE_INTEGER) -
+      (timeSlotOrder.get(b) ?? Number.MAX_SAFE_INTEGER)
+  );
 
 function TimeSlotPage({
   onNavigate,
@@ -9,22 +20,29 @@ function TimeSlotPage({
 }) {
   const selectedSeat = reservationData.seat;
   const seatTimeSlots = selectedSeat ? getTimeSlotsBySeat(selectedSeat) : [];
-  const selectedTimeSlots = reservationData.timeSlots || [];
+  const selectedTimeSlots = Array.isArray(reservationData.timeSlots)
+    ? sortTimeSlots(reservationData.timeSlots)
+    : [];
 
   const handleToggleTimeSlot = (slot) => {
     if (!slot.isAvailable) {
       return;
     }
 
-    const isSelected = selectedTimeSlots.includes(slot.label);
-    const newTimeSlots = isSelected
-      ? selectedTimeSlots.filter((time) => time !== slot.label)
-      : [...selectedTimeSlots, slot.label];
+    setReservationData((prevData) => {
+      const previousTimeSlots = Array.isArray(prevData.timeSlots)
+        ? prevData.timeSlots
+        : [];
+      const isSelected = previousTimeSlots.includes(slot.label);
+      const newTimeSlots = isSelected
+        ? previousTimeSlots.filter((time) => time !== slot.label)
+        : sortTimeSlots([...previousTimeSlots, slot.label]);
 
-    setReservationData((prevData) => ({
-      ...prevData,
-      timeSlots: newTimeSlots,
-    }));
+      return {
+        ...prevData,
+        timeSlots: newTimeSlots,
+      };
+    });
   };
 
   const handleNext = () => {
@@ -60,9 +78,13 @@ function TimeSlotPage({
               onClick={() => handleToggleTimeSlot(slot)}
             >
               <div className="time-slot-time">{slot.label}</div>
-              <div className="status-icon">{isFull ? '×' : isSelected ? '✓' : '○'}</div>
+              <div className="status-icon">
+                {isFull ? '×' : isSelected ? '✓' : '○'}
+              </div>
               <div className="available-seats">
-                {isFull ? 'この時間帯は予約できません' : 'この座席で予約可能です'}
+                {isFull
+                  ? 'この時間帯は予約できません'
+                  : 'この座席で予約可能です'}
               </div>
 
               <button
@@ -113,7 +135,7 @@ function TimeSlotPage({
             onClick={onResetToTop}
             className="btn-secondary"
           >
-            最初に戻る
+            最初へ
           </button>
         </div>
       </div>

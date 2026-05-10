@@ -42,7 +42,7 @@ function WeekCalendar({ weekStart, today, onSelectDate }) {
                 onClick={() => onSelectDate(date)}
                 className="btn-select"
               >
-                選択する
+                選択
               </button>
             </div>
           );

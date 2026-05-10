@@ -189,7 +189,7 @@ function ConfirmPage({ onNavigate, reservationData, onResetToTop }) {
               disabled={isSubmitting}
               className="btn btn-secondary"
             >
-              最初に戻る
+              最初へ
             </button>
           </div>
         </div>

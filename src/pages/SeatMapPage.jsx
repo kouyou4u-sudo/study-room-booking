@@ -106,7 +106,7 @@ function SeatMapPage({
             onClick={onResetToTop}
             className="btn-secondary"
           >
-            最初に戻る
+            最初へ
           </button>
         </div>
       </div>
